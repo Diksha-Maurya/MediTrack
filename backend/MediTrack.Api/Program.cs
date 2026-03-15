@@ -3,6 +3,7 @@ using MediTrack.Api.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.WebHost.UseUrls("http://localhost:5048");
 
 // Add services
 builder.Services.AddControllers();
@@ -33,13 +34,13 @@ builder.Services.AddScoped<AppointmentService>();
 var app = builder.Build();
 
 // Configure pipeline
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+//}
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseCors("AllowReact");
 app.UseAuthorization();
 app.MapControllers();
