@@ -4,6 +4,14 @@ const api = axios.create({
   baseURL: 'http://localhost:5048/api'
 })
 
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token')
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  return config
+})
+
 export const patientApi = {
   getAll: () => api.get('/patients'),
   getById: (id) => api.get(`/patients/${id}`),
@@ -26,4 +34,9 @@ export const appointmentApi = {
   create: (data) => api.post('/appointments', data),
   update: (id, data) => api.put(`/appointments/${id}`, data),
   delete: (id) => api.delete(`/appointments/${id}`)
+}
+
+export const authApi = {
+  register: (data) => api.post('/auth/register', data),
+  login: (data) => api.post('/auth/login', data)
 }

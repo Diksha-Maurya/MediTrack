@@ -10,6 +10,7 @@ public class AppDbContext : DbContext
     public DbSet<Patient> Patients { get; set; }
     public DbSet<Doctor> Doctors { get; set; }
     public DbSet<Appointment> Appointments { get; set; }
+    public DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -27,6 +28,16 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<Doctor>()
             .HasIndex(d => d.Email)
+            .IsUnique();
+
+        // User
+        modelBuilder.Entity<User>()
+            .Property(u => u.Email)
+            .IsRequired()
+            .HasMaxLength(150);
+
+        modelBuilder.Entity<User>()
+            .HasIndex(u => u.Email)
             .IsUnique();
 
         // Appointment

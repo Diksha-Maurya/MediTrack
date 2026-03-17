@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MediTrack.Api.DTOs;
 using MediTrack.Api.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MediTrack.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class PatientsController : ControllerBase
 {
     private readonly PatientService _patientService;
