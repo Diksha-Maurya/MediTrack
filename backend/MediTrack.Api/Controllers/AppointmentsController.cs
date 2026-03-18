@@ -42,9 +42,16 @@ public class AppointmentsController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, UpdateAppointmentDto dto)
     {
-        var appointment = await _appointmentService.UpdateAsync(id, dto);
-        if (appointment == null) return NotFound();
-        return Ok(appointment);
+        try
+        {
+            var appointment = await _appointmentService.UpdateAsync(id, dto);
+            if (appointment == null) return NotFound();
+            return Ok(appointment);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = ex.Message, detail = ex.InnerException?.Message });
+        }
     }
 
     [HttpDelete("{id}")]

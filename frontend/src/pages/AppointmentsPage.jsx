@@ -31,7 +31,7 @@ function AppointmentsPage() {
   const handleSubmit = async () => {
     if (editingAppointment) {
       await appointmentApi.update(editingAppointment.id, {
-        dateTime: form.dateTime,
+        dateTime: new Date(form.dateTime).toISOString(), // ← converts to UTC
         status: form.status,
         notes: form.notes
       })
@@ -39,7 +39,7 @@ function AppointmentsPage() {
       await appointmentApi.create({
         patientId: parseInt(form.patientId),
         doctorId: parseInt(form.doctorId),
-        dateTime: form.dateTime,
+        dateTime: new Date(form.dateTime).toISOString(), // ← converts to UTC
         notes: form.notes
       })
     }
@@ -50,16 +50,23 @@ function AppointmentsPage() {
   }
 
   const handleEdit = (appointment) => {
-    setEditingAppointment(appointment)
-    setForm({
-      patientId: appointment.patientId,
-      doctorId: appointment.doctorId,
-      dateTime: appointment.dateTime.slice(0, 16),
-      notes: appointment.notes || '',
-      status: appointment.status
-    })
-    setShowForm(true)
-  }
+  setEditingAppointment(appointment)
+
+  // Show local time in the form
+  const localDateTime = new Date(appointment.dateTime)
+  const localISO = new Date(localDateTime.getTime() - localDateTime.getTimezoneOffset() * 60000)
+    .toISOString()
+    .slice(0, 16)
+
+  setForm({
+    patientId: appointment.patientId,
+    doctorId: appointment.doctorId,
+    dateTime: localISO,
+    notes: appointment.notes || '',
+    status: appointment.status
+  })
+  setShowForm(true)
+}
 
   const handleDelete = async (id) => {
     if (window.confirm('Delete this appointment?')) {
